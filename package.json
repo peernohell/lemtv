@@ -1,0 +1,30 @@
+{
+  "name": "lemtv",
+  "version": "0.0.1",
+  "description": "A music player where you keep control of your data",
+  "main": "index.js",
+  "dependencies": {
+    "http-server": "^0.12.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "run": "npx http-server ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/peernohell/lemtv.git"
+  },
+  "keywords": [
+    "music",
+    "video",
+    "streaming",
+    "s3",
+    "aws"
+  ],
+  "author": "peernohell",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/peernohell/lemtv/issues"
+  },
+  "homepage": "https://github.com/peernohell/lemtv#readme"
+}

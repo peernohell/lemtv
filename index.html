@@ -10,9 +10,7 @@ var albumBucketName = '1.lem.tv';
 
 // Initialize the Amazon Cognito credentials provider
 AWS.config.region = 'eu-west-1'; // Region
-AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-    IdentityPoolId: localStorage.getItem('aws.idnetityPoolId'),
-});
+AWS.config.credentials = new AWS.Credentials(localStorage.getItem('aws.accessKeyId'), localStorage.getItem('aws.secretAccessKey'));
 
 // Create a new service object
 var s3 = new AWS.S3({

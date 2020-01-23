@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.606.0.js"></script>
+    <!-- <script src="https://sdk.amazonaws.com/js/aws-sdk-2.606.0.js"></script> -->
+    <script src="./aws-sdk-2.606.0-full.js"></script>
     <script>
 // **DO THIS**:
 //   Replace BUCKET_NAME with the bucket name.
@@ -22,7 +23,7 @@ var s3 = new AWS.S3({
 function getHtml(template) {
   return template.join('\n');
 }
-      
+
 //
 // List the photo albums that exist in the bucket.
 function listAlbums() {
@@ -113,11 +114,54 @@ function viewAlbum(albumName) {
     document.getElementById('viewer').innerHTML = getHtml(htmlTemplate);
   });
 }
-listAlbums();
-    </script>
+// listAlbums();
+
+// get s3 url
+listObjectsUrl = async ({ Delimiter, Prefix }) => new Promise((resolve, reject) => {
+  s3.getSignedUrl('listObjects', { Delimiter, Prefix }, (err, url) => err ? reject(err) : resolve(url));
+});
+
+getObjectUrl = async key => new Promise((resolve, reject) => {
+  s3.getSignedUrl('getObject', {Key: '03 - Anesthetize.mp3'}, (err, url) => err ? reject(err) : resolve(url));
+});
+
+</script>
+<script src="main.js" defer></script>
   </head>
   <body>
     <h1>Photo Album Viewer</h1>
     <div id="viewer" />
+
+    <template id="my-paragraph">
+      <style>
+        p {
+          color: white;
+          background-color: #666;
+          padding: 5px;
+        }
+      </style>
+      <p><slot name="my-text">My default text</slot></p>
+    </template>
+
+    <my-paragraph>
+      <span slot="my-text">Let's have some different text!</span>
+    </my-paragraph>
+  
+    <my-paragraph>
+      <ul slot="my-text">
+        <li>Let's have some different text!</li>
+        <li>In a list!</li>
+      </ul>
+    </my-paragraph>
+
+    <template id="music-player">
+      <audio controls="controls" preload="auto" id="audio_player">
+        Your browser does not support the audio format.
+      </audio>
+    </template>
+
+    <music-player s3Key="03 - Anesthetize.mp3">test</music-player>
+
+
   </body>
 </html>

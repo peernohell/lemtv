@@ -6,7 +6,10 @@ extends:
 globals:
   Atomics: readonly
   SharedArrayBuffer: readonly
+  AWS: readonly
 parserOptions:
   ecmaVersion: 2018
   sourceType: module
-rules: {}
+rules:
+  import/extensions: 0
+  no-param-reassign: ["error", { "props": false }]

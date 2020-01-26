@@ -1,17 +1,38 @@
+import AwsAccount from './aws-account.mjs';
 
-/** login class */
-customElements.define('form-login', class extends HTMLElement {
+
+async function onSubmit(event) {
+  event.preventDefault();
+  const form = event.target;
+  const { accessKeyId, secretAccessKey, bucketName, region } = form;
+
+  const awsAccount = new AwsAccount(accessKeyId.value, secretAccessKey.value, region.value);
+  awsAccount.bucketName = bucketName.value;
+console.log(awsAccount);
+  const list = await awsAccount.listObjects({ Bucket: awsAccount.bucketName });
+  console.log('list', list);
+
+  const layoutMain = document.querySelector('layout-main');
+  const bucketList = layoutMain.shadowRoot.querySelector('bucket-list');
+  bucketList.setAwsAccount(awsAccount);
+  layoutMain.setAttribute('template', 'main-screen');
+}
+
+class FormLogin extends HTMLElement {
   /** login constructor */
   constructor() {
     super();
+
     const template = document.getElementById('form-login');
     const templateContent = template.content;
 
     const clone = templateContent.cloneNode(true);
-    this.attachShadow({mode: 'open'}).appendChild(clone);
+
+    const form = clone.querySelector('form');
+    form.addEventListener('submit', onSubmit.bind(this));
+
+    this.attachShadow({ mode: 'open' }).appendChild(clone);
   }
-  /** connect */
-  connectedCallback() {
-    // connect event on form submit.
-  }
-});
+}
+
+customElements.define('form-login', FormLogin);

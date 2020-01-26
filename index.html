@@ -3,32 +3,7 @@
   <head>
     <!-- <script src="https://sdk.amazonaws.com/js/aws-sdk-2.606.0.js"></script> -->
     <script src="./aws-sdk-2.606.0-full.js"></script>
-    <script>
-// **DO THIS**:
-//   Replace BUCKET_NAME with the bucket name.
-//
-var albumBucketName = '1.lem.tv';
-
-AWS.config.region = 'eu-west-1'; // Region
-AWS.config.credentials = new AWS.Credentials(localStorage.getItem('aws.accessKeyId'), localStorage.getItem('aws.secretAccessKey'));
-
-// Create a new service object
-var s3 = new AWS.S3({
-  apiVersion: '2006-03-01',
-  params: {Bucket: albumBucketName}
-});
-
-// get s3 url
-listObjectsUrl = async ({ Delimiter, Prefix }) => new Promise((resolve, reject) => {
-  s3.getSignedUrl('listObjects', { Delimiter, Prefix }, (err, url) => err ? reject(err) : resolve(url));
-});
-
-getObjectUrl = async key => new Promise((resolve, reject) => {
-  s3.getSignedUrl('getObject', { Key: '03 - Anesthetize.mp3' }, (err, url) => err ? reject(err) : resolve(url));
-});
-
-</script>
-<script type="module" src="layout-main.js" defer></script>
+    <script type="module" src="layout-main.mjs" defer></script>
   </head>
   <body>
     <template id="music-player">
@@ -39,15 +14,23 @@ getObjectUrl = async key => new Promise((resolve, reject) => {
 
     <template id="form-login">
       <h2>Login</h2>
-      <input type="text" placeholder="accessKeyId">
-      <input type="text" placeholder="secretAccessKey">
+      <form>
+        <input type="text" placeholder="Access key id" name="accessKeyId">
+        <input type="text" placeholder="Secret access key" name="secretAccessKey">
+        <input type="text" placeholder="Regin" name="region">
+        <input type="text" placeholder="Bucket name" name="bucketName">
+        <button type="submit">Connect</button>
+      </form>
     </template>
 
     <template id="layout-main">
       <div id="main" data-template="h1">
-        <h1>Loading</h1>
-        <form-login></form-login>
-        <music-player s3Key="03 - Anesthetize.mp3">test</music-player>
+        <h1 id="loading">Loading</h1>
+        <form-login id="form-login"></form-login>
+        <div id="main-screen">
+          <bucket-list></bucket-list>
+          <music-player s3Key="03 - Anesthetize.mp3">test</music-player>
+        </div>
       </div>
     </template>
     <layout-main>test</layout-main>

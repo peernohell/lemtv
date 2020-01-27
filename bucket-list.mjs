@@ -1,17 +1,8 @@
-// const albumBucketName = '1.lem.tv';
-
-// AWS.config.region = 'eu-west-1'; // Region
-// AWS.config.credentials = new AWS.Credentials(localStorage.getItem('aws.accessKeyId'), localStorage.getItem('aws.secretAccessKey'));
-
 // web components
 // TODO: check this to have two source so sound loading will note create blank between song.
-
-// const url = await aws.s3.getObjectUrl(s3Key || template.dataset.s3Key);
-
 function switchToFormLogin() {
   document.querySelector('layout-main').setAttribute('template', 'form-login');
 }
-
 
 
 customElements.define('bucket-list', class MusicPlayer extends HTMLElement {
@@ -55,7 +46,6 @@ customElements.define('bucket-list', class MusicPlayer extends HTMLElement {
       console.log('connectedCallback', object);
       return `<li class="js-s3-object" data-bucket="${this.awsAccount.bucketName}" data-key="${object.Key}">Object: ${object.Key}</li>`;
     })}</ul>`;
-
   }
 
   async click(event) {
@@ -69,5 +59,4 @@ customElements.define('bucket-list', class MusicPlayer extends HTMLElement {
     const url = await this.awsAccount.getObjectUrl(bucket, key);
     musicPlayer.setAttribute('url', url);
   }
-
 });

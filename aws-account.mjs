@@ -19,7 +19,11 @@ class AwsAccount extends EventTarget {
       region,
     });
 
-    ['getSignedUrl', 'listObjects'].forEach((property) => {
+    [
+      'getSignedUrl',
+      'listObjects',
+      'headBucket',
+    ].forEach((property) => {
       this[property] = callbackToPromise(this.s3[property].bind(this.s3));
     });
 
@@ -30,7 +34,6 @@ class AwsAccount extends EventTarget {
   listObjectsUrl({ Delimiter, Prefix }) { return this.getSignedUrl('listObjects', { Delimiter, Prefix }); }
 
   getObjectUrl(bucket, key) { return this.getSignedUrl('getObject', { Bucket: bucket, Key: key }); }
-
 }
 
 export default AwsAccount;

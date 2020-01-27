@@ -4,13 +4,15 @@ import AwsAccount from './aws-account.mjs';
 async function onSubmit(event) {
   event.preventDefault();
   const form = event.target;
-  const { accessKeyId, secretAccessKey, bucketName, region } = form;
+  const {
+    accessKeyId, secretAccessKey, bucketName, region,
+  } = form;
 
   const awsAccount = new AwsAccount(accessKeyId.value, secretAccessKey.value, region.value);
   awsAccount.bucketName = bucketName.value;
-console.log(awsAccount);
-  const list = await awsAccount.listObjects({ Bucket: awsAccount.bucketName });
-  console.log('list', list);
+  console.log(awsAccount);
+  const head = await awsAccount.headBucket({ Bucket: awsAccount.bucketName });
+  console.log('head', head);
 
   const layoutMain = document.querySelector('layout-main');
   const bucketList = layoutMain.shadowRoot.querySelector('bucket-list');

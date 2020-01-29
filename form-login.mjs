@@ -1,6 +1,3 @@
-import AwsAccount from './aws-account.mjs';
-
-
 async function onSubmit(event) {
   event.preventDefault();
   const form = event.target;
@@ -8,15 +5,10 @@ async function onSubmit(event) {
     accessKeyId, secretAccessKey, bucketName, region,
   } = form;
 
-  const awsAccount = new AwsAccount(accessKeyId.value, secretAccessKey.value, region.value);
-  awsAccount.bucketName = bucketName.value;
-  console.log(awsAccount);
-  const head = await awsAccount.headBucket({ Bucket: awsAccount.bucketName });
-  console.log('head', head);
-
   const layoutMain = document.querySelector('layout-main');
   const bucketList = layoutMain.shadowRoot.querySelector('bucket-list');
-  bucketList.setAwsAccount(awsAccount);
+
+  bucketList.connectAwsAccount(accessKeyId.value, secretAccessKey.value, region.value, bucketName.value);
   layoutMain.setAttribute('template', 'main-screen');
 }
 

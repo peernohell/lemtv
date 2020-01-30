@@ -23,6 +23,7 @@ class AwsAccount extends EventTarget {
       'getSignedUrl',
       'listObjects',
       'headBucket',
+      'deleteObject',
     ].forEach((property) => {
       this[property] = callbackToPromise(this.s3[property].bind(this.s3));
     });

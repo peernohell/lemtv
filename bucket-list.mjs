@@ -53,10 +53,10 @@ customElements.define('bucket-list', class MusicPlayer extends HTMLElement {
     try {
       const head = await awsAccount.headBucket({ Bucket: awsAccount.bucketName });
       console.log('bucket-list.connectAwsAccount: head', head);
-      
+
       this.awsAccount = awsAccount;
     } catch (err) {
-      console.log('bucket-list.connectAwsAccount: head failed!', { err, awsAccount, bucketName, awsBucketName: awsAccount.bucketName, })
+      console.log('bucket-list.connectAwsAccount: head failed!', { err, awsAccount, bucketName, awsBucketName: awsAccount.bucketName });
     } finally {
       this.connecting = false;
     }
@@ -86,7 +86,7 @@ customElements.define('bucket-list', class MusicPlayer extends HTMLElement {
     const list = await this.awsAccount.listObjects({ Bucket: this.awsAccount.bucketName, Delimiter: '/' });
     this.innerHTML = `
 <ul>
-  ${list.Contents.map((object) => `<li class="js-s3-object" data-bucket="${this.awsAccount.bucketName}" data-key="${object.Key}">${object.Key} <span class="js-delete" data-bucket="${this.awsAccount.bucketName}" data-key="${object.Key}">X</span></li>`).join('')}
+  ${list.Contents.map(object => `<li class="js-s3-object" data-bucket="${this.awsAccount.bucketName}" data-key="${object.Key}">${object.Key} <span class="js-delete" data-bucket="${this.awsAccount.bucketName}" data-key="${object.Key}">X</span></li>`).join('')}
 </ul>
 <label><input type="file" name='file'></label>
 `;
@@ -103,7 +103,7 @@ customElements.define('bucket-list', class MusicPlayer extends HTMLElement {
 
     const { bucket, key } = event.target.dataset;
     const url = await this.awsAccount.getObjectUrl(bucket, key);
-    musicPlayer.setAttribute('url', url);
+    musicPlayer.setAttribute('music', JSON.stringify({ key, url }));
   }
 
   async click2(event) {
@@ -116,21 +116,21 @@ customElements.define('bucket-list', class MusicPlayer extends HTMLElement {
 
   async upload({ target }) {
     console.log('upload started');
-    const files = target.files;
+    const { files } = target;
     if (!files.length) return alert('Please choose a file to upload first.');
 
     const file = files[0];
     const fileName = file.name;
     // const albumPhotosKey = encodeURIComponent(albumName) + "//";
-  
+
     // const photoKey = albumPhotosKey + fileName;
     const photoKey = fileName;
 
     const upload = this.awsAccount.s3.upload({ Bucket: this.awsAccount.bucketName, Key: fileName, Body: file });
     console.log('upload: ', { upload });
 
-    upload.on('httpUploadProgress', ({ lengthComputable, loaded, total, type, }) => {
-      console.log('upload: httpUploadProgress', {type, lengthComputable, loaded, total })
+    upload.on('httpUploadProgress', ({ lengthComputable, loaded, total, type }) => {
+      console.log('upload: httpUploadProgress', { type, lengthComputable, loaded, total });
     });
 
     const res = await upload.promise();

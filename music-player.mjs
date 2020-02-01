@@ -10,7 +10,7 @@
 
 
 customElements.define('music-player', class MusicPlayer extends HTMLElement {
-  static get observedAttributes() { return ['url']; }
+  static get observedAttributes() { return ['music']; }
 
   constructor() {
     super();
@@ -21,13 +21,42 @@ customElements.define('music-player', class MusicPlayer extends HTMLElement {
     const clone = templateContent.cloneNode(true);
     this.attachShadow({ mode: 'open' }).appendChild(clone);
 
+    this.attacheEvents();
     this.load();
   }
 
-  async load(url) {
-    const template = document.getElementById('music-player');
-
+  attacheEvents() {
     const shadow = this.shadowRoot;
+    const audio = shadow.querySelector('audio');
+    const playPause = shadow.querySelector('.play-pause');
+
+    playPause.addEventListener('click', () => {
+      if (audio.paused) {
+        audio.play();
+        playPause.classList.remove('icon-play');
+        playPause.classList.add('icon-stop');
+      } else {
+        audio.pause();
+        playPause.classList.remove('icon-stop');
+        playPause.classList.add('icon-play');
+      }
+    });
+
+    shadow.querySelector('.next').addEventListener('click', () => {
+      audio.src = 'another audio source';
+    });
+
+    audio.ontimeupdate = () => {
+      shadow.querySelector('.progress').style.width = `${audio.currentTime / audio.duration * 100}%`;
+    };
+  }
+
+  async load({ key, url }) {
+    const shadow = this.shadowRoot;
+
+    const name = shadow.querySelector('.info .name');
+    name.textContent = key;
+
     const audio = shadow.querySelector('audio');
     // const source = shadow.querySelector('source');
 
@@ -41,6 +70,6 @@ customElements.define('music-player', class MusicPlayer extends HTMLElement {
 
   attributeChangedCallback(name, oldValue, newValue) {
     console.log('music-player: attributeChangedCallback', name, oldValue, newValue);
-    if (oldValue !== newValue) this.load(newValue);
+    if (oldValue !== newValue) this.load(JSON.parse(newValue));
   }
 });

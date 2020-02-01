@@ -1,10 +1,11 @@
 
-const callbackToPromise = (fn) => (...args) => new Promise((resolve, reject) => {
+const callbackToPromise = fn => (...args) => new Promise((resolve, reject) => {
   fn(...args, (err, result) => (err ? reject(err) : resolve(result)));
 });
 
 class AwsAccount extends EventTarget {
   state = 'disconnected';
+
   accounts = [];
 
   constructor(accessKeyId, secretAccessKey, region) {
@@ -24,7 +25,7 @@ class AwsAccount extends EventTarget {
       'listObjects',
       'headBucket',
       'deleteObject',
-    ].forEach((property) => {
+    ].forEach(property => {
       this[property] = callbackToPromise(this.s3[property].bind(this.s3));
     });
 

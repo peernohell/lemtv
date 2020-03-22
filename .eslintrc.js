@@ -30,6 +30,7 @@ module.exports = {
     "no-else-return": 0,
     "no-underscore-dangle": 0,
     "operator-linebreak": ["error", "after"],
+    "no-restricted-syntax": 0,
   },
   globals: {
     Atomics: 'readonly',

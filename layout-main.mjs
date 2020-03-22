@@ -2,6 +2,7 @@
 import './form-login.mjs';
 import './music-player.mjs';
 import './bucket-list.mjs';
+import './test-click.mjs';
 
 /** layout class */
 customElements.define('layout-main', class extends HTMLElement {
@@ -27,7 +28,7 @@ customElements.define('layout-main', class extends HTMLElement {
 
   updateLayout(template) {
     const main = this.shadowRoot.querySelector('#main');
-    Array.from(main.children).forEach((el) => {
+    Array.from(main.children).forEach(el => {
       el.style.display = (template === el.id) ? '' : 'none';
     });
   }
